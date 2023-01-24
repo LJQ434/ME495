@@ -27,7 +27,7 @@ class ROBOT:
             self.motors[jointName] = motor.MOTOR(jointName)
             self.motors[jointName].Prepare_To_Act()
             self.motors[jointName].Set_Value(c.am[i],c.p[i],c.f[i],c.F[i])
-            print(c.F[i])
+            #print(c.F[i])
             i=i+1
 
     def Sense(self,t):
