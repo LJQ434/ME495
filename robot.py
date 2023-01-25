@@ -9,7 +9,8 @@ import motor
 import constants as c
 
 class ROBOT:
-    def __init__(self):
+    def __init__(self,physicsClient):
+        self.physicsClient=physicsClient
         self.RobotId = p.loadURDF("body.urdf")
         self.motors = {}
         self.sensors = {}
@@ -35,7 +36,7 @@ class ROBOT:
             #print(linkName)
             self.sensors[linkName].Get_Value(t)
     
-    def Think(self,t):
+    def Think(self):
         self.nn.Update()
         self.nn.Print()
         

@@ -13,8 +13,8 @@ class SIMULATION:
         self.physicsClient = p.connect(p.GUI)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0,0,-9.8)
-        self.world = WORLD()
-        self.robot = ROBOT()
+        self.world = WORLD(self.physicsClient)
+        self.robot = ROBOT(self.physicsClient)
         pyrosim.Prepare_To_Simulate(self.robot.RobotId)
         self.robot.Prepare_To_Sense()
         self.robot.Prepare_To_Act()
@@ -24,13 +24,14 @@ class SIMULATION:
         for t in range (c.iter):
             p.stepSimulation()
             self.robot.Sense(t)
-            self.robot.Think(t)
+            self.robot.Think()
             self.robot.Act(t)
             # step time
-            time.sleep(0.01)
-            self.robot.Save_Values()
+            time.sleep(0.001)
+            #self.robot.Save_Values()
+            #p.disconnect()
     
     def __del__(self):
         p.disconnect()
+        pass
 
-# %%

@@ -1,8 +1,12 @@
 #%%
 from simulation import SIMULATION
 
-simulation = SIMULATION()
-simulation.RUN()
+def main():
+    simulation = SIMULATION()
+    simulation.RUN()
+    simulation.__del__()
+    print("finished")
 
+main()
 
 # %%
