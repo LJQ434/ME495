@@ -19,7 +19,10 @@ class ROBOT:
         os.system("del brain"+solutionID+".nndf")
         os.system("del body"+solutionID+".urdf")
 
-        
+    ##############################################################################
+    #  preparation
+    ##############################################################################      
+  
     def Prepare_To_Sense(self):
         #self.sensors = sensor.SENSOR()
         for linkName in pyrosim.linkNamesToIndices:
@@ -31,9 +34,12 @@ class ROBOT:
         for jointName in pyrosim.jointNamesToIndices:
             self.motors[jointName] = motor.MOTOR(jointName)
             self.motors[jointName].Prepare_To_Act()
-            self.motors[jointName].Set_Value(c.am[i],c.p[i],c.f[i],c.F[i])
             #print(c.F[i])
             i=i+1
+
+    ##############################################################################
+    #  action
+    ##############################################################################     
 
     def Sense(self,t):
        for linkName in pyrosim.linkNamesToIndices:
@@ -48,7 +54,8 @@ class ROBOT:
         for neuronName in self.nn.Get_Neuron_Names():
             if self.nn.Is_Motor_Neuron(neuronName):
                 jointName1 = self.nn.Get_Motor_Neurons_Joint(neuronName)
-                desiredAngle = self.nn.Get_Value_Of(neuronName)
+                #print("!!!!!!motor neuron name:",neuronName)
+                desiredAngle = c.motorJointRange * self.nn.Get_Value_Of(neuronName)
                 #print(neuronName)
                 #print(jointName)
                 #print(desiredAngle)
@@ -60,7 +67,12 @@ class ROBOT:
                 maxForce = self.motors[jointName1].force)
 
         #for jointName in pyrosim.jointNamesToIndices:
-            
+
+
+    ##############################################################################
+    #  evaluation
+    ##############################################################################         
+
     def Get_Fitness(self,ID):
         self.stateOfLinkZero = p.getLinkState(self.RobotId,0)
         self.positionOfLinkZero = self.stateOfLinkZero[0]

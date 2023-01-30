@@ -12,16 +12,8 @@ class MOTOR:
         self.amplitude = 0
         self.phaseOffset = 0
         self.frequency = 0
-        self.force = 0
+        self.force = 28
         self.motorValues = numpy.zeros(c.iter)
-    
-    def Set_Value(self,a,p,f,F):
-        self.amplitude = a
-        self.phaseOffset = p
-        self.frequency = f
-        self.force = F
-        for i in range (c.iter):
-            self.motorValues[i] = self.amplitude * numpy.sin(self.frequency * i + self.phaseOffset)
     
     def Save_Values(self):
         numpy.save('motor_value_b'+str(self.jointName),self.motorValues)

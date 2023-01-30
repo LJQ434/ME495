@@ -17,10 +17,11 @@ class PARALLEL_HILL_CLIMBER:
         for key in range (c.populationSize):
             self.parents[key] = SOLUTION(self.nextAvailableID)
             self.nextAvailableID = self.nextAvailableID + 1
-        
-        
-        #print(self.parent.weight)
-        
+
+    #############################################################################
+    #  evolve (evaluate, spawn, mutate, select)
+    ##############################################################################
+         
     def Evolve(self):
         
         self.Evaluate(self.parents)
@@ -31,31 +32,46 @@ class PARALLEL_HILL_CLIMBER:
             self.Evolve_For_One_Generation(self.directOrGUI)
         
         self.Show_Best()
-    
-    def Evaluate(self,solutions):
-        for ID in range (c.populationSize):
-            solutions[ID].Start_Simulation(self.directOrGUI,ID) 
-        for ID in range (c.populationSize):
-            solutions[ID].Wait_For_Simulation_To_End(self.directOrGUI,ID)
+        
+        ################################################################
 
     def Evolve_For_One_Generation(self,directOrGUI):
+
         self.Spawn()
         self.Mutate()
         self.Evaluate(self.children)
         self.print() #print parent and children in a line
         self.Select()
-        
+    
+        ################################################################
+    
+    def Evaluate(self,solutions):
+
+        for ID in range (c.populationSize):
+            solutions[ID].Start_Simulation(self.directOrGUI,ID) 
+        for ID in range (c.populationSize):
+            solutions[ID].Wait_For_Simulation_To_End(self.directOrGUI,ID)
+    
+        ################################################################
+    
     def Spawn(self):
+
         for ID in range (c.populationSize):
             self.children[ID] = copy.deepcopy(self.parents[ID])
-
+    
+        ################################################################
+    
     def Mutate(self):
+
         for ID in range (c.populationSize):
             self.children[ID].Mutate()
         #print('parent weight=',self.parent.weights)
         #print('child weight=',self.child.weights)
-
+    
+        ################################################################
+    
     def Select(self):
+
         #print('fitness pair:',self.parent[ID].fitness, self.child[ID].fitness)
          for ID in range (c.populationSize):
             if self.children[ID].fitness > self.parents[ID].fitness:
@@ -63,7 +79,12 @@ class PARALLEL_HILL_CLIMBER:
                 print("forgroup",ID,":","child win")
             else:
                 print("forgroup",ID,":","parent win")
-        
+    
+
+    ##############################################################################
+    #  show and print
+    ##############################################################################    
+
     def Show_Best(self):
         self.directOrGUI="DIRECT"  
         self.Evaluate(self.parents)
@@ -73,6 +94,9 @@ class PARALLEL_HILL_CLIMBER:
                  self.bestsolution =  copy.deepcopy(self.parents[ID])
 
         self.bestsolution.Start_Simulation("GUI",ID)     
+
+
+        ################################################################
 
     def print(self):
         for ID in range (c.populationSize):
