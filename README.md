@@ -8,8 +8,8 @@ The task is to walk forward and climb on to the platform.
 
 Fitness is: torso z position * torso y position.
 
-
-
+video link:
+https://drive.google.com/file/d/1Sx9bqy0F9WYWmposx8HQd0fRRjgdrqVv/view?usp=sharing
 
 
 

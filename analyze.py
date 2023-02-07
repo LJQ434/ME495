@@ -8,8 +8,8 @@ f = open("bestsolution.txt","r")
 weights = (f.read()).split()
 f.close()
 for i in range(c.numSensorNeurons):
-    for j in range(c.numSensorNeurons):
-        best.weights[i][j]=float(weights[c.numSensorNeurons*i+j])
+    for j in range(c.numMotorNeurons):
+        best.weights[i][j]=float(weights[c.numMotorNeurons*i+j])
 
 print(best.weights)
 best.Start_Simulation("GUI",0)

@@ -11,7 +11,7 @@ class PARALLEL_HILL_CLIMBER:
         hc=0
         self.parents = {}
         self.children = {}
-        self.directOrGUI="GUI"
+        self.directOrGUI="DIRECT"
         self.nextAvailableID = 0
         self.bestsolution = SOLUTION(self.nextAvailableID)
         for key in range (c.populationSize):
@@ -91,10 +91,12 @@ class PARALLEL_HILL_CLIMBER:
         self.bestsolution =  copy.deepcopy(self.parents[0])
         self.bestid = 0
         for ID in range (c.populationSize):
-            if self.parents[ID].fitness > self.bestsolution.fitness:
+            if self.parents[ID].fitness >= self.bestsolution.fitness:
                  self.bestsolution =  copy.deepcopy(self.parents[ID])
+                 self.bestsolution.fitness = self.parents[ID].fitness
                  self.bestid = ID
         print("the best is:",self.bestid)
+        print(self.bestsolution.weights)
 
         for ID in range (c.populationSize):
             if ID == self.bestid:

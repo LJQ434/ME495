@@ -61,25 +61,25 @@ class SOLUTION:
         ### torso 
 
         pyrosim.Start_URDF("body"+str(ID)+".urdf") 
-        pyrosim.Send_Cube(name="Torso", pos=[0,0,2] , size=[0.4,1.2,0.4]) #link1
+        pyrosim.Send_Cube(name="Torso", pos=[0,0,2] , size=[0.4,0.8,0.4], mass=2) #link1
         
         ###############################################################
         ### first tentacle
     
         pyrosim.Send_Joint(name = "Torso_link11" , parent= "Torso" , child = "link11" , type = "revolute", position = [0,0.4,1.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link11", pos=[0,0.25,-0.4] , size=[0.5,0.5,0.8]) #link2
-        pyrosim.Send_Joint(name = "link11_link12" , parent= "link11" , child = "link12" , type = "revolute", position =  [0,0.25,-0.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link12", pos=[0,0,-0.4]  , size=[0.6,0.6,0.8]) #link2
-        pyrosim.Send_Joint(name = "link12_link13" , parent= "link12" , child = "link13" , type = "revolute", position = [0,0,-0.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link13", pos=[0,0,-0.1] , size=[0.6,0.6,0.2]) #link2
+        pyrosim.Send_Cube(name="link11", pos=[0,0,-0.5] , size=[0.5,0.5,1]) #link2
+        pyrosim.Send_Joint(name = "link11_link12" , parent= "link11" , child = "link12" , type = "revolute", position =  [0,0,-1], jointAxis = "1 0 0")
+        pyrosim.Send_Cube(name="link12", pos=[0,0,-0.3]  , size=[0.4,0.4,0.6]) #link2
+        pyrosim.Send_Joint(name = "link12_link13" , parent= "link12" , child = "link13" , type = "revolute", position = [0,0,-0.6], jointAxis = "1 0 0")
+        pyrosim.Send_Cube(name="link13", pos=[0,0.1,-0.1] , size=[0.4,0.6,0.2]) #link2
 
     
         pyrosim.Send_Joint(name = "Torso_link21" , parent= "Torso" , child = "link21" , type = "revolute", position =[0,-0.4,1.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link21", pos=[0,-0.25,-0.4] , size=[0.5,0.5,0.8]) #link2
-        pyrosim.Send_Joint(name = "link21_link22" , parent= "link21" , child = "link22" , type = "revolute", position =  [0,-0.25,-0.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link22", pos=[0,0,-0.4]  , size=[0.6,0.6,0.8]) #link2
-        pyrosim.Send_Joint(name = "link22_link23" , parent= "link22" , child = "link23" , type = "revolute", position = [0,0,-0.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link23", pos=[0,0,-0.1] , size=[0.6,0.6,0.2]) #link2
+        pyrosim.Send_Cube(name="link21", pos=[0,0,-0.5] , size=[0.5,0.5,1]) #link2
+        pyrosim.Send_Joint(name = "link21_link22" , parent= "link21" , child = "link22" , type = "revolute", position =  [0,0,-1], jointAxis = "1 0 0")
+        pyrosim.Send_Cube(name="link22", pos=[0,0,-0.3]  , size=[0.4,0.4,0.6]) #link2
+        pyrosim.Send_Joint(name = "link22_link23" , parent= "link22" , child = "link23" , type = "revolute", position = [0,0,-0.6], jointAxis = "1 0 0")
+        pyrosim.Send_Cube(name="link23", pos=[0,0.1,-0.1] , size=[0.4,0.6,0.2]) #link2
 
         
         pyrosim.End()
@@ -106,7 +106,7 @@ class SOLUTION:
         ###############################################################
         ### mortor neurons (on joints)
         pyrosim.Send_Motor_Neuron( name = 6 , jointName = "Torso_link11")
-        pyrosim.Send_Motor_Neuron( name = 7 , jointName = "link11_link12")
+        pyrosim.Send_Motor_Neuron( name = 7, jointName = "link11_link12")
         pyrosim.Send_Motor_Neuron( name = 8 , jointName = "link12_link13")
         pyrosim.Send_Motor_Neuron( name = 9 , jointName = "Torso_link21")
         pyrosim.Send_Motor_Neuron( name = 10, jointName = "link21_link22")
