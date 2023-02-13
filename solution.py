@@ -8,8 +8,20 @@ import constants as c
 class SOLUTION:
 
     def __init__(self,nextAvailableID):
+        
+        self.bodynumber = 3 + numpy.random.randint(6,size=1)[0]                             # number of bodies (initial with a number, randomly changed later)
+        self.bodysize = 0.2+ 0.8*numpy.random.rand(3, self.bodynumber)                      # give rondom size to each direction of the body (0.2-1), xyz are all random 
+        self.sensorstatus = numpy.random.randint(2,size = self.bodynumber)                  # decide whether add sensor to each body link
+        self.sensornumber = sum(self.sensorstatus)
+        while (self.sensornumber == 0):
+            self.sensorstatus = numpy.random.randint(2,size = self.bodynumber)              # make sure at least have 1 sensor
+            self.sensornumber = sum(self.sensorstatus)
+        print(self.sensorstatus)
+        self.motorstatus = numpy.random.randint(2,size = self.bodynumber-1) 
+        self.motornumber = self.bodynumber - 1 ##### all joint has a motor
 
-        self.weights = 2 * numpy.random.rand(c.numSensorNeurons,c.numMotorNeurons) - 1
+        self.weights = 2 * numpy.random.rand(self.sensornumber,self.motornumber) - 1        # weight of synapses
+        
         self.myID = nextAvailableID
         self.fitness = 0
         
@@ -50,7 +62,7 @@ class SOLUTION:
     def Create_World(self):
 
         pyrosim.Start_SDF("world.sdf")
-        pyrosim.Send_Cube(name="Box", pos=[0,8,0.25] , size=[10,10,0.5], mass=100000)
+        pyrosim.Send_Cube(name="Box", pos=[8,8,0.25] , size=[0.5,0.5,0.5], mass=100000) #give a box in world (will not interact with snake)
         
         pyrosim.End()
         
@@ -60,66 +72,63 @@ class SOLUTION:
         ###############################################################
         ### torso 
 
-        pyrosim.Start_URDF("body"+str(ID)+".urdf") 
-        pyrosim.Send_Cube(name="Torso", pos=[0,0,2] , size=[0.4,0.8,0.4], mass=2) #link1
-        
-        ###############################################################
-        ### first tentacle
-    
-        pyrosim.Send_Joint(name = "Torso_link11" , parent= "Torso" , child = "link11" , type = "revolute", position = [0,0.4,1.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link11", pos=[0,0,-0.5] , size=[0.5,0.5,1]) #link2
-        pyrosim.Send_Joint(name = "link11_link12" , parent= "link11" , child = "link12" , type = "revolute", position =  [0,0,-1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link12", pos=[0,0,-0.3]  , size=[0.4,0.4,0.6]) #link2
-        pyrosim.Send_Joint(name = "link12_link13" , parent= "link12" , child = "link13" , type = "revolute", position = [0,0,-0.6], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link13", pos=[0,0.1,-0.1] , size=[0.4,0.6,0.2]) #link2
+        pyrosim.Start_URDF("body"+str(ID)+".urdf")  
+        if self.sensorstatus[0] == 1:  colorifsensor='Green'
+        else: colorifsensor='Cyan'
+        pyrosim.Send_Cube(name="link0", 
+                          pos=[0,0,0.5], 
+                          size=[self.bodysize[0][0],self.bodysize[1][0],self.bodysize[2][0]],
+                          color= colorifsensor
+                          ) #link0, torso (first random body, bodyid=0)
 
-    
-        pyrosim.Send_Joint(name = "Torso_link21" , parent= "Torso" , child = "link21" , type = "revolute", position =[0,-0.4,1.8], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link21", pos=[0,0,-0.5] , size=[0.5,0.5,1]) #link2
-        pyrosim.Send_Joint(name = "link21_link22" , parent= "link21" , child = "link22" , type = "revolute", position =  [0,0,-1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link22", pos=[0,0,-0.3]  , size=[0.4,0.4,0.6]) #link2
-        pyrosim.Send_Joint(name = "link22_link23" , parent= "link22" , child = "link23" , type = "revolute", position = [0,0,-0.6], jointAxis = "1 0 0")
-        pyrosim.Send_Cube(name="link23", pos=[0,0.1,-0.1] , size=[0.4,0.6,0.2]) #link2
-
+        ### first link (on y+ direation )
+        pyrosim.Send_Joint(name = "link0_link1" , parent= "link0" , child = "link1" , type = "revolute", position = [0, self.bodysize[1][0]/2 ,0.5], jointAxis = "1 0 0") #joint0-1 
         
+        if self.sensorstatus[1] == 1:  colorifsensor='Green'
+        else: colorifsensor='Cyan'
+        pyrosim.Send_Cube(name= "link1",
+                          pos=[0,self.bodysize[1][1]/2,0] ,
+                          size=[self.bodysize[0][1],self.bodysize[1][1],self.bodysize[2][1]],
+                          color = colorifsensor
+                          ) #link1 (second random body, bodyid=1)
+
+        ### linear snake body
+        for linkid in range (2,self.bodynumber):
+            pyrosim.Send_Joint(name = "link"+str(linkid-1)+"_link"+str(linkid) , parent= "link"+str(linkid-1) , child = "link"+str(linkid) , type = "revolute", position = [0,self.bodysize[1][linkid-1],0], jointAxis = "1 0 0") #new joint 
+            if self.sensorstatus[linkid] == 1:  colorifsensor='Green'
+            else: colorifsensor='Cyan'
+            pyrosim.Send_Cube(name= "link"+str(linkid), 
+                              pos=[0,self.bodysize[1][linkid]/2,0] , 
+                              size=[self.bodysize[0][linkid],self.bodysize[1][linkid],self.bodysize[2][linkid]],
+                              color = colorifsensor
+                              ) #new link
         pyrosim.End()
 
 
     def Generate_Brain(self,ID):
-
+        flag = 0
         #generate neurons
         pyrosim.Start_NeuralNetwork("brain"+str(ID)+".nndf")
-        
+
         ###############################################################
         ### sensor neurons (on links)
-        
-        #pyrosim.Send_Sensor_Neuron(name = 0 , linkName = "Torso")
-        pyrosim.Send_Sensor_Neuron(name = 0 , linkName = "link11")
-        pyrosim.Send_Sensor_Neuron(name = 1 , linkName = "link12")
-        pyrosim.Send_Sensor_Neuron(name = 2 , linkName = "link13")
-        pyrosim.Send_Sensor_Neuron(name = 3 , linkName = "link21")
-        pyrosim.Send_Sensor_Neuron(name = 4 , linkName = "link22")
-        pyrosim.Send_Sensor_Neuron(name = 5 , linkName = "link23")
-
-   
+        for linkid in range (self.bodynumber):
+            if self.sensorstatus[linkid]==1:
+                pyrosim.Send_Sensor_Neuron(name = flag , linkName = "link"+str(linkid))
+                flag=flag+1
 
         ###############################################################
         ### mortor neurons (on joints)
-        pyrosim.Send_Motor_Neuron( name = 6 , jointName = "Torso_link11")
-        pyrosim.Send_Motor_Neuron( name = 7, jointName = "link11_link12")
-        pyrosim.Send_Motor_Neuron( name = 8 , jointName = "link12_link13")
-        pyrosim.Send_Motor_Neuron( name = 9 , jointName = "Torso_link21")
-        pyrosim.Send_Motor_Neuron( name = 10, jointName = "link21_link22")
-        pyrosim.Send_Motor_Neuron( name = 11 , jointName = "link22_link23")
-
-        
+        for linkid in range (self.motornumber):
+            pyrosim.Send_Motor_Neuron( name = self.sensornumber + linkid , jointName = "link"+str(linkid)+"_link"+str(linkid+1))
+            
         #generate synapses
-        for currentRow in range(c.numSensorNeurons): #name of sensor neurons
-            for currentColumn in range(c.numMotorNeurons): #name of motor neurons
+        for currentRow in range(self.sensornumber): #name of sensor neurons
+            for currentColumn in range(self.motornumber): #name of motor neurons
                 pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
                  targetNeuronName = currentColumn + c.numMotorNeurons , 
                  weight = self.weights[currentRow][currentColumn] )
-    
+ 
         pyrosim.End()
 
     
@@ -127,8 +136,22 @@ class SOLUTION:
     #  Mutation 
     #############################################################################
     def Mutate(self):
-        randomRow = numpy.random.randint(1,c.numSensorNeurons)
-        randomColumn = numpy.random.randint(1,c.numMotorNeurons)
-        self.weights[randomRow,randomColumn] = 2 * numpy.random.random() - 1
+         
+        ### mutation of body size
+        randomRow = numpy.random.randint(0,self.bodynumber)
+        for i in range (3):
+            self.bodysize[i,randomRow]= 0.2+ 0.8*numpy.random.random()
 
+        ### mutation of sensor distribution
+        randomRow = numpy.random.randint(0,self.bodynumber)
+        self.sensorstatus[randomRow] = int(numpy.random.randint(1,size=1))
+        self.sensornumber = sum(self.sensorstatus)
+        if self.sensornumber == 0:
+            self.sensorstatus[randomRow] = 1
+            self.sensornumber = sum(self.sensorstatus)
+
+        ### mutation of synaesis weight
+        randomRow = numpy.random.randint(0,self.sensornumber)
+        randomColumn = numpy.random.randint(0,self.motornumber)
+        self.weights[randomRow,randomColumn] = 2 * numpy.random.random() - 1
 # %%

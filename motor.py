@@ -12,7 +12,7 @@ class MOTOR:
         self.amplitude = 0
         self.phaseOffset = 0
         self.frequency = 0
-        self.force = 28
+        self.force = c.force
         self.motorValues = numpy.zeros(c.iter)
     
     def Save_Values(self):

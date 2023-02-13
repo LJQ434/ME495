@@ -55,9 +55,6 @@ class ROBOT:
                 jointName1 = self.nn.Get_Motor_Neurons_Joint(neuronName)
                 #print("!!!!!!motor neuron name:",neuronName)
                 desiredAngle = c.motorJointRange * self.nn.Get_Value_Of(neuronName)
-                #print(neuronName)
-                #print(jointName)
-                #print(desiredAngle)
                 pyrosim.Set_Motor_For_Joint(
                 bodyIndex = self.RobotId,
                 jointName = jointName1,
@@ -79,7 +76,7 @@ class ROBOT:
         self.xPosition = basePosition[0]
         self.yPosition = basePosition[1]
         self.zPosition = basePosition[2]
-        fitness = (self.yPosition)*self.zPosition
+        fitness = (-self.yPosition)
         #print('x=',self.xCoordinateOfLinkZero)
         #print('y=',self.yCoordinateOfLinkZero)
         f = open("tmp"+ID+".txt","w")

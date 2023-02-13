@@ -11,7 +11,7 @@ class PARALLEL_HILL_CLIMBER:
         hc=0
         self.parents = {}
         self.children = {}
-        self.directOrGUI="DIRECT"
+        self.directOrGUI="GUI"
         self.nextAvailableID = 0
         self.bestsolution = SOLUTION(self.nextAvailableID)
         for key in range (c.populationSize):
@@ -36,9 +36,10 @@ class PARALLEL_HILL_CLIMBER:
         ################################################################
 
     def Evolve_For_One_Generation(self,directOrGUI):
-
+    
         self.Spawn()
         self.Mutate()
+        self.Regenerate() # body and brain update
         self.Evaluate(self.children)
         self.print() #print parent and children in a line
         self.Select()
@@ -69,7 +70,11 @@ class PARALLEL_HILL_CLIMBER:
         #print('child weight=',self.child.weights)
     
         ################################################################
-    
+    def Regenerate(self):
+        for ID in range (c.populationSize):
+            self.children[ID].Generate_Body
+            self.children[ID].Generate_Brain
+
     def Select(self):
 
         #print('fitness pair:',self.parent[ID].fitness, self.child[ID].fitness)
@@ -97,7 +102,7 @@ class PARALLEL_HILL_CLIMBER:
                  self.bestid = ID
         print("the best is:",self.bestid)
         print(self.bestsolution.weights)
-
+        ### find best solution's body and brain file and save them
         for ID in range (c.populationSize):
             if ID == self.bestid:
                 if os.path.isfile('body.urdf'):
@@ -116,20 +121,32 @@ class PARALLEL_HILL_CLIMBER:
             os.system("del brain0.nndf") 
         os.rename("body.urdf","body0.urdf")
         os.rename("brain.nndf","brain0.nndf")
-        f = open("bestsolution.txt","w")
-        for i in range(c.numSensorNeurons):
-            for j in range(c.numMotorNeurons):
+
+        ### save synapses weight
+        f = open("bestweight.txt","w")
+        for i in range(self.bestsolution.sensornumber):
+            for j in range(self.bestsolution.motornumber):
                 f.write(str(self.parents[self.bestid].weights[i][j])) #distance it moves
+                f.write(' ')
+        f.close()  
+
+         ### save shape parameters  
+        f = open("bestshape.txt","w")
+        f.write(str(self.parents[self.bestid].bodynumber)) # how many bodies 
+        f.write(' ')
+        for i in range(self.bestsolution.bodynumber):
+            for j in range (3):
+                f.write(str(self.parents[self.bestid].bodysize[j][i])) #xyz size of each body
                 f.write(' ')
         f.close()    
 
+        ### save sensor distribution
+        f = open("bestsensorplan.txt","w")
+        for i in range(self.bestsolution.bodynumber):
+            f.write(str(self.parents[self.bestid].sensorstatus[i])) #sensor distribution
+            f.write(' ')
+        f.close()    
 
-        # if os.path.isfile('body10.urdf'):
-        #     os.system("del body10.urdf") 
-        # os.rename("body.urdf","body10.urdf" )
-        # if os.path.isfile('brain10.nndf'):
-        #     os.system("del brain10.nndf") 
-        # os.rename("brain.nndf","brain10.nndf" )
         self.bestsolution.Start_Simulation("GUI",ID)     
 
 
