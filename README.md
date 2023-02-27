@@ -43,3 +43,6 @@ Typical case that one always win:<br>
 Typical case of fairly competitation:<br>
 ![Typical case of fairly competitation (best fitness)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-bestfintess.png)
 ![Typical case of fairly competitation (fitness of all population)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-fintess.png)
+
+## Reference
+1. [Ludobots](https://www.reddit.com/r/ludobots/) <br>
