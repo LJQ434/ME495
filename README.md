@@ -38,10 +38,10 @@ And by running plotfitness.py, you can see the fitness curve.
 Two typical type of fitness curve is shown as below:
 
 Typical case that one always win:
-![Typical case that one always win (best fitness)]https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case1-bestfintess.png
-![Typical case that one always win (fitness of all population)]https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case1-fintess.png
+![Typical case that one always win (best fitness)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case1-bestfintess.png)
+![Typical case that one always win (fitness of all population)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case1-fintess.png)
 
 
 Typical case of fairly competitation:
-![Typical case of fairly competitation (best fitness)]https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-bestfintess.png
-![Typical case of fairly competitation (fitness of all population)]https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-fintess.png
+![Typical case of fairly competitation (best fitness)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-bestfintess.png)
+![Typical case of fairly competitation (fitness of all population)](https://github.com/LJQ434/ME495/blob/3D-crab-evolve/Case2-fintess.png)
