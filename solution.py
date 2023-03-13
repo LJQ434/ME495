@@ -298,35 +298,48 @@ class SOLUTION:
         for limb in range (self.limbnumber):
             for body in range(self.number_of_limbbody[limb]):
                 if self.chromosome_sonsor[limb][body] == 1:
-                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb) + "link"+ str(body))
-                    flag=flag+1
-                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb+self.limbnumber) + "link"+ str(body))
+                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb) + "link"+ str(body))                    
+                    flag=flag+1  
+                    
+        for limb in range (self.limbnumber):
+            for body in range(self.number_of_limbbody[limb]):
+                if self.chromosome_sonsor[limb][body] == 1:
+                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb + self.limbnumber) + "link"+ str(body))  #sym
                     flag=flag+1
 
+        sensorneuron = flag
+        print(sensorneuron)
 
         ###############################################################
         ### mortor neurons (on joints)
         for limb in range (self.limbnumber):
-            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb) + "link0")
-            flag=flag+1
-            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb+self.limbnumber) + "link0")
+            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb) + "link0") 
             flag=flag+1
             if self.number_of_limbbody[limb]>1:
                 for body in range(1,self.number_of_limbbody[limb]):
-                    pyrosim.Send_Motor_Neuron( name = flag , jointName ="limb" + str(limb) + "link"+ str(body-1) + "_" + "limb" + str(limb) + "link"+ str(body))
+                    pyrosim.Send_Motor_Neuron( name = flag , jointName ="limb" + str(limb) + "link"+ str(body-1) + "_" + "limb" + str(limb) + "link"+ str(body))  
                     flag=flag+1
-                    pyrosim.Send_Motor_Neuron( name = flag , jointName = "limb" + str(limb+self.limbnumber) + "link"+ str(body-1) + "_" + "limb" + str(limb+self.limbnumber) + "link"+ str(body))
+        #sym            
+        for limb in range (self.limbnumber):
+            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb + self.limbnumber) + "link0") #sym
+            flag=flag+1
+            if self.number_of_limbbody[limb]>1:
+                for body in range(1,self.number_of_limbbody[limb]):
+                    pyrosim.Send_Motor_Neuron( name = flag , jointName = "limb" + str(limb + self.limbnumber) + "link"+ str(body-1) + "_" + "limb" + str(limb+self.limbnumber) + "link"+ str(body))  #sym
                     flag=flag+1
+
 
         ###############################################################    
         #generate synapses
-        for limb in range (self.limbnumber):
-            for currentRow in range(self.sornumber): #name of sensor neurons
-                for currentColumn in range(self.motornumber): #name of motor neurons
-                 pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
-                 targetNeuronName = currentColumn + 8 , 
-                 weight = self.weights[currentRow][currentColumn] )
- 
+        
+        for currentRow in range(sensorneuron): #name of sensor neurons
+            for currentColumn in range(self.motornumber): #name of motor neurons
+                pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
+                targetNeuronName = currentColumn + 8 , 
+                weight = self.weights[currentRow][currentColumn] )
+                    
+    
+    
         pyrosim.End()
 
     
@@ -362,7 +375,7 @@ class SOLUTION:
                 self.chromosome_bodydirection[limb][body][2] = 0
             
             #regenerate weights
-            self.weights=
+            self.weights = 2 * (numpy.random.rand(self.totalsensornumber,self.motornumber)-1)     # weight of synapses
              
         ### mutation of body size 
         limb =  numpy.random.randint(0,self.limbnumber)
