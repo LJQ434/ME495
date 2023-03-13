@@ -4,6 +4,7 @@ import pyrosim.pyrosim as pyrosim
 import numpy
 import time
 import constants as c
+from random import sample
 
 class SOLUTION:
 
@@ -11,7 +12,7 @@ class SOLUTION:
         
         ### basic setting
         self.limbnumber = 2                                                                         # body = torso + 2*limb1(symetric) + 2*limb2(symetric)    # each limb is a 3D random snake
-        self.maxlimbbodynumber = 5                                                             # maximium size to each limb  (set 4 for now)
+        self.maxlimbbodynumber = 5                                                            # maximium size to each limb  (set 4 for now)
 
         ### limb body number initialize
         self.number_of_limbbody = numpy.zeros(self.limbnumber, dtype = int)                  
@@ -33,30 +34,34 @@ class SOLUTION:
                     self.chromosome_bodydirection[limb][body][0] =  numpy.random.randint(-1,1)        # ex. direction of limb_i body_j+1 to body_j: self.chromosome_bodydirection[i][3*j],[i][3*j+1],[i][3*j+2]
                     self.chromosome_bodydirection[limb][body][1] =  numpy.random.randint(-1,1)        # ex. (0,1,-1)= y positive + z negative direction
                     self.chromosome_bodydirection[limb][body][2] =  numpy.random.randint(-1,1)        # even no body is there, the direction information is still restored. just like gene
-                    # check if reverse back?
-                    if sum(abs(self.chromosome_bodydirection[limb][body] + self.chromosome_bodydirection[limb][body-1])) ==0:
-                        self.chromosome_bodydirection[limb][body] = self.chromosome_bodydirection[limb][body-1]
                     # check if all zero?
                     if sum(abs(self.chromosome_bodydirection[limb][body]))==0:  self.chromosome_bodydirection[limb][body][2] = -1
                     # check if at conor? (abs(xyz) =1)
                     if abs(self.chromosome_bodydirection[limb][body][0]*self.chromosome_bodydirection[limb][body][1]*self.chromosome_bodydirection[limb][body][2])==1:
                         self.chromosome_bodydirection[limb][body][2] = 0
-                    
+                    # check if reverse back?
+                    if sum(abs(self.chromosome_bodydirection[limb][body] + self.chromosome_bodydirection[limb][body-1])) ==0:
+                        self.chromosome_bodydirection[limb][body] = self.chromosome_bodydirection[limb][body-1]
             
 
-        ### chromosomes decide brain
-        self.sensornumber =0
-        self.chromosome_sonsor = numpy.random.randint(2, size = (2,self.maxlimbbodynumber) )       # decide whether add sensor to each body link
+        ### chromosomes decide brain #(set the sensor number to be 2 for each limb, but not define where to put, but random set)
+        self.sensornumber = 4
+        self.chromosome_sonsor = numpy.zeros((2,self.maxlimbbodynumber), dtype = int )      # decide whether add sensor to each body link
+        for limb in range (self.limbnumber):
+            lst = list(range(0,self.number_of_limbbody[limb]))
+            sensorbody = sample(lst,2)
+            for i in range (2):
+                 self.chromosome_sonsor [limb][sensorbody[i]] = 1
+        self.sensornumber = 0
         for limb in range ( self.limbnumber):
             for body in range (self.number_of_limbbody[limb] ):
                 self.sensornumber = self.sensornumber + self.chromosome_sonsor[limb][body]         # sensor number is sum within all existing limbs
-        # check if sensor is 0
-        if self.sensornumber == 0: self.chromosome_sonsor[0][0]=1
-        self.sensornumber = 1
-        
-        self.totalsensornumber = self.sensornumber * 2                                             # *2 becasue symetric 
-        self.motornumber =  sum(self.number_of_limbbody)  *2                                  # motor on every joint  # *2 becasue symetric 
-        self.weights = 2 * numpy.random.rand(self.totalsensornumber,self.motornumber)         # weight of synapses
+        if  self.sensornumber != 4:
+            print('!!!!!!sensor set wrong!!!!!!')
+            print( self.chromosome_sonsor)
+               
+        ###
+        self.weights = 2 * (numpy.random.rand(self.limbnumber, 2, max(self.number_of_limbbody)) -1)     # weight of synapses
         
         ### print check
         #print(self.totalsensornumber)
@@ -75,10 +80,26 @@ class SOLUTION:
         self.Create_World()
         self.Generate_Body(ID)
         self.Generate_Brain(ID)
+        self.record(ID)
         
         # run simulate
         os.system("start /B python simulate2.py "+ directOrGUI +" "+ str(ID) )
 
+    def record(self,ID):
+        f = open("sensorandmotor"+str(ID)+".txt","w")
+        f.write(str(self.limbnumber))
+        f.write(" ")
+        f.write(str(self.sensornumber))
+        f.write(" ")
+        f.write(str(self.limbnumber))
+        f.write(" ")
+        
+        
+
+    def Only_simulate(self,directOrGUI,ID):
+       
+        # run simulate
+        os.system("start /B python simulate2.py "+ directOrGUI +" "+ str(ID) )
 
     def Wait_For_Simulation_To_End(self,directOrGUI,ID):
         
@@ -295,11 +316,12 @@ class SOLUTION:
 
         ###############################################################    
         #generate synapses
-        for currentRow in range(self.totalsensornumber): #name of sensor neurons
-            for currentColumn in range(self.motornumber): #name of motor neurons
-                pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
-                 targetNeuronName = currentColumn + c.numMotorNeurons , 
-                 weight = self.weights[currentRow][currentColumn] )
+        for limb in range (self.limbnumber):
+            for currentRow in range(2): #name of sensor neurons
+                for currentColumn in range(self.number_of_limbbody[limb]): #name of motor neurons
+                    pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
+                    targetNeuronName = currentColumn + c.numMotorNeurons , 
+                    weight = self.weights[limb][currentRow][currentColumn] )
  
         pyrosim.End()
 
@@ -308,36 +330,7 @@ class SOLUTION:
     #  Mutation 
     #############################################################################
     def Mutate(self,generation):
-         
-        ### mutation of body size
         
-        limb =  numpy.random.randint(0,self.limbnumber)
-        randomRow = numpy.random.randint(0,self.number_of_limbbody[limb])
-        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
-        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
-        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
-
-
-        ### mutation of sensor distribution
-        limb =  numpy.random.randint(0,self.limbnumber)
-        randomRow = numpy.random.randint(0,self.number_of_limbbody[limb])
-        self.chromosome_sonsor[limb][randomRow] = int(numpy.random.randint(1,size=1))
-        
-        for limb in range ( self.limbnumber):
-            for body in range (self.number_of_limbbody[limb] ):
-                self.sensornumber = self.sensornumber + self.chromosome_sonsor[limb][body]
-
-        if self.sensornumber == 0:
-            self.chromosome_sonsor[limb][randomRow] = 1
-            for limb in range ( self.limbnumber):
-                for body in range (self.number_of_limbbody[limb] ):
-                    self.sensornumber = self.sensornumber + self.chromosome_sonsor[limb][body]
-        
-        ### mutation of synaesis weight
-        randomRow = numpy.random.randint(0,self.totalsensornumber)
-        randomColumn = numpy.random.randint(0,self.motornumber)
-        self.weights[randomRow,randomColumn] = 2 * numpy.random.random() - 1
-
         ### shape mutate in every 20 generation:
         if generation % 10 == 0:
             #limb number change
@@ -363,6 +356,39 @@ class SOLUTION:
             # check if at conor? (abs(xyz) =1)
             if abs(self.chromosome_bodydirection[limb][body][0]*self.chromosome_bodydirection[limb][body][1]*self.chromosome_bodydirection[limb][body][2])==1:
                 self.chromosome_bodydirection[limb][body][2] = 0
-            
+
+            #regenerate weights
+            self.weights = 2 * (numpy.random.rand(self.limbnumber, 2, max(self.number_of_limbbody)) -1)     # weight of synapses
+             
+        ### mutation of body size 
+        limb =  numpy.random.randint(0,self.limbnumber)
+        randomRow = numpy.random.randint(0,self.number_of_limbbody[limb])
+        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
+        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
+        self.chromosome_bodysize[limb][randomRow]= 0.2+ 0.8*numpy.random.random()
+
+
+        ### mutation of sensor distribution
+        self.chromosome_sonsor = numpy.zeros((2,self.maxlimbbodynumber), dtype = int )     
+        for limb in range (self.limbnumber):
+            lst = list(range(0,self.number_of_limbbody[limb]))
+            sensorbody = sample(lst,2)
+            for i in range (2):
+                 self.chromosome_sonsor [limb][sensorbody[i]] = 1
+        self.sensornumber = 0
+        for limb in range ( self.limbnumber):
+            for body in range (self.number_of_limbbody[limb] ):
+                self.sensornumber = self.sensornumber + self.chromosome_sonsor[limb][body]         # sensor number is sum within all existing limbs
+        if  self.sensornumber != 4:
+            print('!!!!!!sensor set wrong!!!!!!')
+            print(self.sensornumber)
+        
+        ### mutation of synaesis weight
+        randlimb = numpy.random.randint(0,self.limbnumber)
+        randomRow = numpy.random.randint(0,2)
+        randomColumn = numpy.random.randint(0,self.number_of_limbbody[randlimb])
+        self.weights[randlimb][randomRow][randomColumn] = 2 * numpy.random.random() - 1
+
+       
 
 # %%

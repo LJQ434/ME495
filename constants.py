@@ -1,10 +1,10 @@
 
 
-numberOfGenerations= 150 # number of generations 
+numberOfGenerations= 500 # number of generations 
 populationSize = 5 #parellel population
 
 motorJointRange = 0.6
-iter= 2500 #iteration times in GUI simulation
+iter= 1000 #iteration times in GUI simulation
 force = 200
 
 scaler = 0.8

@@ -37,7 +37,7 @@ class PARALLEL_HILL_CLIMBER:
         ################################################################
 
     def Evolve_For_One_Generation(self,directOrGUI,generation):
-    
+        
         self.Spawn()
         self.Mutate(generation)
         self.Regenerate() # body and brain update
@@ -105,7 +105,7 @@ class PARALLEL_HILL_CLIMBER:
         print("the best is:",self.bestid,'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
       
 
-        self.bestsolution.Start_Simulation("GUI",ID)    
+        
 
         ### find best solution's body and brain file and save them
         for ID in range (c.populationSize):
@@ -127,13 +127,7 @@ class PARALLEL_HILL_CLIMBER:
         os.rename("body.urdf","body0.urdf")
         os.rename("brain.nndf","brain0.nndf")
 
-        ### save synapses weight
-        f = open("bestweight.txt","w")
-        for i in range(self.bestsolution.totalsensornumber):
-            for j in range(self.bestsolution.motornumber):
-                f.write(str(self.parents[self.bestid].weights[i][j])) #distance it moves
-                f.write(' ')
-        f.close()  
+        
 
         ###
         f = open("bestfitness.txt","w")
@@ -159,7 +153,7 @@ class PARALLEL_HILL_CLIMBER:
         #     f.write(' ')
         # f.close()    
 
-         
+        self.bestsolution.Only_simulate("GUI",0)    
 
 
         ################################################################
