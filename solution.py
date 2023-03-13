@@ -323,8 +323,8 @@ class SOLUTION:
         for limb in range (self.limbnumber):
             for currentRow in range(self.sornumber): #name of sensor neurons
                 for currentColumn in range(self.motornumber): #name of motor neurons
-                pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
-                 targetNeuronName = currentColumn + c.numMotorNeurons , 
+                 pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
+                 targetNeuronName = currentColumn + 8 , 
                  weight = self.weights[currentRow][currentColumn] )
  
         pyrosim.End()
