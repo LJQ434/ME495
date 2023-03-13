@@ -13,7 +13,7 @@ class SOLUTION:
         ### basic setting
         self.limbnumber = 2                                                                         # body = torso + 2*limb1(symetric) + 2*limb2(symetric)    # each limb is a 3D random snake
         self.maxlimbbodynumber = 5                                                            # maximium size to each limb  (set 4 for now)
-
+        self.hiddenneuron = 8
         ### limb body number initialize
         self.number_of_limbbody = numpy.zeros(self.limbnumber, dtype = int)                  
         for i in range (self.limbnumber):
@@ -294,36 +294,63 @@ class SOLUTION:
         for limb in range (self.limbnumber):
             for body in range(self.number_of_limbbody[limb]):
                 if self.chromosome_sonsor[limb][body] == 1:
-                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb) + "link"+ str(body))
-                    flag=flag+1
-                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb+self.limbnumber) + "link"+ str(body))
+                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb) + "link"+ str(body))                    
+                    flag=flag+1  
+                    
+        for limb in range (self.limbnumber):
+            for body in range(self.number_of_limbbody[limb]):
+                if self.chromosome_sonsor[limb][body] == 1:
+                    pyrosim.Send_Sensor_Neuron(name = flag , linkName = "limb" + str(limb + self.limbnumber) + "link"+ str(body))  #sym
                     flag=flag+1
 
+        sensorneuron = flag
+        print(sensorneuron)
+
+        ###############################################################
+        ### hidden neurons (on joints)
+        # for i in range (self.hiddenneuron):
+        #     pyrosim.Send_Hidden_Neuron(name = flag)
+        #     flag = flag + 1
+        
+        # hiddenneuron = flag - sensorneuron
 
         ###############################################################
         ### mortor neurons (on joints)
         for limb in range (self.limbnumber):
-            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb) + "link0")
-            flag=flag+1
-            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb+self.limbnumber) + "link0")
+            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb) + "link0") 
             flag=flag+1
             if self.number_of_limbbody[limb]>1:
                 for body in range(1,self.number_of_limbbody[limb]):
-                    pyrosim.Send_Motor_Neuron( name = flag , jointName ="limb" + str(limb) + "link"+ str(body-1) + "_" + "limb" + str(limb) + "link"+ str(body))
+                    pyrosim.Send_Motor_Neuron( name = flag , jointName ="limb" + str(limb) + "link"+ str(body-1) + "_" + "limb" + str(limb) + "link"+ str(body))  
                     flag=flag+1
-                    pyrosim.Send_Motor_Neuron( name = flag , jointName = "limb" + str(limb+self.limbnumber) + "link"+ str(body-1) + "_" + "limb" + str(limb+self.limbnumber) + "link"+ str(body))
+                    
+        for limb in range (self.limbnumber):
+            pyrosim.Send_Motor_Neuron( name = flag , jointName ="Torso_limb" + str(limb + self.limbnumber) + "link0") #sym
+            flag=flag+1
+            if self.number_of_limbbody[limb]>1:
+                for body in range(1,self.number_of_limbbody[limb]):
+                    pyrosim.Send_Motor_Neuron( name = flag , jointName = "limb" + str(limb + self.limbnumber) + "link"+ str(body-1) + "_" + "limb" + str(limb+self.limbnumber) + "link"+ str(body))  #sym
                     flag=flag+1
+        
 
         ###############################################################    
         #generate synapses
         for limb in range (self.limbnumber):
+
             for currentRow in range(2): #name of sensor neurons
                 for currentColumn in range(self.number_of_limbbody[limb]): #name of motor neurons
-                    pyrosim.Send_Synapse( sourceNeuronName = currentRow ,
-                    targetNeuronName = currentColumn + c.numMotorNeurons , 
+                    pyrosim.Send_Synapse( sourceNeuronName = currentRow +2*limb,
+                    targetNeuronName = currentColumn +  sensorneuron,
+                    weight = self.weights[limb][currentRow][currentColumn] )
+            #sym 
+            for currentRow in range(2): #name of sensor neurons
+                for currentColumn in range(self.number_of_limbbody[limb]): #name of motor neurons
+                    pyrosim.Send_Synapse( sourceNeuronName = currentRow +2*limb + 4,
+                    targetNeuronName = currentColumn +  sensorneuron + self.number_of_limbbody[0] + self.number_of_limbbody[1],
                     weight = self.weights[limb][currentRow][currentColumn] )
  
         pyrosim.End()
+
 
     
     #############################################################################
