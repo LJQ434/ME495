@@ -3,6 +3,7 @@
 Octopus has a great control of its limbs, enableing various behavior patterns, which allows it to mimic almost everything in the sea, and attack its prey without being noticed. 
 It is believed that the octopus has more than one brain. Actually, it has 9: mini one for each limbs and a main one in the middle. This distributed neuron network might be the
 reason why it can be so capabale and flexible.<br>
+![diagram1](https://github.com/LJQ434/ME495/blob/final_project/final%20project/octopus%20brain.png)
 
 In this project, we will look into the difference between centeralized neuron network which we are commomly used in all our assignments, and the octopus-like distributed neuron network.
 Will they be different? Which one performs better? And why?
