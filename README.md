@@ -81,9 +81,9 @@ Running with long legs is always faster than creeping, as it is proved in the re
 That might be the second reason that the distributed brain performs better than the centralized brain. 
 
 ## Conclusion
-*1. On the task of moving forwar, with the body of 3D quadruped, with the same amount of sensor and hidden neurons, the distributed network has faster learning <br>
+*1. On the task of moving forwar, with the body of 3D quadruped, with the same amount of sensor and hidden neurons, the distributed network has faster learning 
 speed and seperatable limb control, which makes it performs better within the limited 500 generations than the centralized brain. <br>
-*2. Adding hidden neurons will improve the performance of quadruped, and the best individua of centralized network quadraped with 8 hidden neurons has similar <br>
+*2. Adding hidden neurons will improve the performance of quadruped, and the best individua of centralized network quadraped with 8 hidden neurons has similar 
 performance with the distributed network quadraped, so the distributed brain is not always better.<br>
 
 ## Future plan
