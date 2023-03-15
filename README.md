@@ -1,6 +1,6 @@
 # Final Project: Distributed network vs Centralized network (the Scientist)
 
-Octopus has a great control of its lmbs, enables various behavior patterns, which allows it to mimic almost everything in the sea, and attack its prey without being noticed. 
+Octopus has a great control of its limbs, enableing various behavior patterns, which allows it to mimic almost everything in the sea, and attack its prey without being noticed. 
 It is believed that the octopus has more than one brain. Actually, it has 9: mini one for each limbs and a main one in the middle. This distributed neuron network might be the
 reason why it can be so capabale and flexible.<br>
 
