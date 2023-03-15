@@ -103,4 +103,4 @@ All .py code should be run under the recommended environment [environment](https
 solution.py is different for each group. Other files are the same. <br>
 Result data in the above analysis are also provided in each group's folder <br>
 Youtube Video: [video](https://youtu.be/ppdzcMhPtC8)<br>
-
+10sec gif: [gif](https://github.com/LJQ434/ME495/blob/final_project/final%20project/10sec.gif)
