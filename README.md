@@ -39,7 +39,9 @@ The diagram of each groups' neuron networks is shown as below:<br>
 fig 2. diagram of brain structure<br>
 
 ### Evolve and Select
-Weigths of synapses and limb's body size is slightly and randomly mutate in every generation.
+Weigths of synapses and limb's body size is slightly and randomly mutate in every generation:<br> 
+*1. randomly choose a synapses to change its weight randomly<br> 
+*2. randomly choose a limb, and randomly choose a body in that limb, and changes its size.<br> 
 So the parents will have a similar shape with its children. But the children may be smarter.<br> 
 
 In every 20 genenrations, the limbs' body number and body direction has a large mutation. 
