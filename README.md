@@ -55,7 +55,7 @@ fig 3. diagram of evolvement<br>
 
 ## Result 
 5 runs are conducted independently for each group, 5 initial parents are applied for each run, and each individual experiences 500 generations.<br>
-That is, each group has a 5*5*500 = 25000 simulations, which will be sufficient for statistical analysis. <br>
+That is, each group has a 5x5x500 = 25000 simulations, which will be sufficient for statistical analysis. <br>
 The average fitness and best fitness among all populations in all runs are ploted as below:<br>
 
 ![diagram4](https://github.com/LJQ434/ME495/blob/final_project/final%20project/result%20diagram.png)<br>
