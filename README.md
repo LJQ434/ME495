@@ -1,5 +1,12 @@
 # Final Project: Distributed network vs Centralized network (the Scientist)
 
+Octopus has a great control of its lmbs, enables various behavior patterns, which allows it to mimic almost everything in the sea, and attack its prey without being noticed. 
+It is believed that the octopus has more than one brain. Actually, it has 9: mini one for each limbs and a main one in the middle. This distributed neuron network might be the
+reason why it can be so capabale and flexible.<br>
+
+In this project, we will look into the difference between centeralized neuron network which we are commomly used in all our assignments, and the octopus-like distributed neuron network.
+Will they be different? Which one performs better? And why?
+
 ## Hypothesis
 On the task of moving with limbs, the distributed neuron network performs better than centralized network.
 
@@ -31,8 +38,13 @@ The diagram of each groups' neuron networks is shown as below:<br>
 fig 2. diagram of brain structure<br>
 
 ### Evolve and Select
-Weigths of synapses and limb's body size is slightly and randomly mutate in every generation.<br>
-And every 20 genenrations, the limbs' body number and body direction has a large mutation.<br>
+Weigths of synapses and limb's body size is slightly and randomly mutate in every generation.
+So the parents will have a similar shape with its children. But the children may be smarter.<br> 
+
+In every 20 genenrations, the limbs' body number and body direction has a large mutation. 
+Such mutation will randomly move a body of a limb to a new direction, add or delete a body in a limb.
+Children will inherit the basic shape, but different in one limb. Also, it might have more or less motor neurons. <br>
+
 <br> 
 the fitness is defined as: y/abs(1+x)<br>
 And only the winner with higher fitness can pass its gene to the next genegration.<br>
@@ -47,13 +59,23 @@ The average fitness and best fitness among all populations in all runs are plote
 
 ![diagram4](https://github.com/LJQ434/ME495/blob/final_project/final%20project/result%20diagram.png)<br>
 fig 4. average and best fitness curve of each group<br>
+As can be seen in the plots, the average fitness of the distributed brain increase faster than that of the centralized brain with the same neuron number.
+And the average curve of distributed brain is always higher than the centralized brain. 
+That means the distributed network has a faster training speeed, which might due to the small number of synapses it has compared to the centralized brain.
+The less the synapses, the less searching space, and the faster it can find the optimal point.
+However, that might also due to the low efficiency of random search. Obviously the centralized network has more possibilities, and thus great potentials that has 
+not been fully discovered with random search. <br>
+<br>
+We can also see from the best fitness curve that the distributed network with hidden neurons is the best. But the distributed network not always performs better than
+the centralized one. Centralized network with hidden neurons performs similarly with the distributed network without the hidden neurons. 
+
 
 And the performance of the best individual of each group can be seen in this video: [video](https://youtu.be/ppdzcMhPtC8) <br>
-It can be easily observed from the video that the centralized brain can hardly move its limb seperately, but always move together. <br>
-The distributed brain, however, is good at controling the limbs seperately.<br>
-And thus the quadruped with distributed brain can walk or run, but the centralized one can only have small jumps and our creeping.<br>
-Running with long legs is always faster than creeping, as it is proved in the real world. <br>
-That might be the second reason that the distributed brain performs better than the centralized brain. <br>
+It can be easily observed from the video that the centralized brain can hardly move its limb seperately, but always move together. 
+The distributed brain, however, is good at controling the limbs seperately.
+And thus the quadruped with distributed brain can walk or run, but the centralized one can only have small jumps and our creeping.
+Running with long legs is always faster than creeping, as it is proved in the real world. 
+That might be the second reason that the distributed brain performs better than the centralized brain. 
 
 ## Conclusion
 *1. On the task of moving forwar, with the body of 3D quadruped, with the same amount of sensor and hidden neurons, the distributed network has faster learning <br>
@@ -61,10 +83,19 @@ speed and seperatable limb control, which makes it performs better within the li
 *2. Adding hidden neurons will improve the performance of quadruped, and the best individua of centralized network quadraped with 8 hidden neurons has similar <br>
 performance with the distributed network quadraped, so the distributed brain is not always better.<br>
 
+## Future plan
+To further investigate how the distributed neuron network performs, a more complex task should be assigned. For example, <br>
+*1. let the robot climb steps or over rugged terrain<br>
+*2. Let the robot get through holes like octopus<br>
+<br>
+And a more hierarchical network should be involved: mini brains for local control and main brains for totoal control.<br>
+<br>
+The random search method may not serve the purpose well. So a more efficient learning method should be considered and applied.<br>
+<br>
 ## Reference
-Ludobots, by DrJosh [reddit link](https://www.reddit.com/r/ludobots/)
-Pyrosim adn pybullet[link](https://pybullet.org/wordpress/)
-ME495 Artificial Life, teached by [Sam Kriegman](https://www.mccormick.northwestern.edu/research-faculty/directory/profiles/kriegman-sam.html)
+Ludobots, by DrJosh [reddit link](https://www.reddit.com/r/ludobots/)<br>
+Pyrosim adn pybullet[link](https://pybullet.org/wordpress/)<br>
+ME495 Artificial Life, teached by [Sam Kriegman](https://www.mccormick.northwestern.edu/research-faculty/directory/profiles/kriegman-sam.html)<br>
 
 ## files description 
 All .py code should be run under the recommended environment [environment](https://www.reddit.com/r/ludobots/wiki/installation/) <br>
